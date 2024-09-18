@@ -1,12 +1,16 @@
+// MainActivity.kt
 package com.neecs.sharedpreferencesintro
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var counterTextView: TextView
+    private val counterViewModel: CounterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,16 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         counterTextView = findViewById(R.id.counterTextView)
 
-        val sharedPreferences = getSharedPreferences("com.neecs.sharedpreferencesintro", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        var counter = sharedPreferences.getInt("counter", 0)
-
-        counter++
-
-        editor.putInt("counter", counter)
-        editor.apply()
-
-        counterTextView.text = counter.toString()
+        counterViewModel.incrementCounter()
+        counterTextView.text = counterViewModel.getCounter().toString()
     }
 }
